@@ -1,0 +1,65 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<section class="section-content padding-y bg">
+
+<div class="container mb-5">
+
+	<div class="row padding-y mt-5">
+	
+    <div class="col-md-3"></div>
+	<main class="col-md-9 mt-5">
+		<article class="card" style="width: fit-content !important;">
+		<header class="card-header bg-success">
+			<strong class="d-inline-block mr-2">All Receipts</strong>
+		</header>
+		<div class="card-body">
+			<div class="row">
+				
+				<div class="col-md-12">
+					<table class="table table-hover table-bordered">
+						<thead>
+						  <tr>
+							<th scope="col">Receipt No</th>
+							<th scope="col">Received From</th>
+                            <th>Date</th>
+							<th scope="col">Action</th>
+						  </tr>
+						</thead>
+						<tbody>
+							{% for invoice in all_invoice %}
+							
+								<tr class="" style="font-size:12px;color:grey;">
+									
+									<th scope="row">{{ invoice.receipt_no}}</th>
+									<td>{{ invoice.receive_from }}</td>
+									<td>{{ invoice.created_at }}</td>
+                                    <td><a href="{% url 'single_invoice' invoice.id invoice.receipt_no %}" class="btn btn-primary btn-sm">Print</a>
+                 						<a href="{% url 'add_item' %}" class="btn btn-success btn-sm">Add Products</a>
+									 	<a href="{% url 'all_items' invoice.receipt_no %}" class="btn btn-secondary btn-sm">View</a>
+									</td>
+									
+							 	</tr>
+							
+							{% endfor %}
+						  
+						 
+						</tbody>
+					  </table>
+				</div>
+				
+			</div> <!-- row.// -->
+		</div> <!-- card-body .// -->
+		
+		</article> <!-- order-group.// -->
+	</main>
+</div> <!-- row.// -->
+</div>
+
+
+</section>
+
+{% endblock content %}

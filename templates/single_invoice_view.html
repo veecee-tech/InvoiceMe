@@ -1,0 +1,134 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/single_invoice_view.css' %}">  
+
+    <script>
+      printDivCSS = new String (' <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">      ')
+      printDivCSS2 = new String ('<link rel="stylesheet" href={% static "css/single_invoice_view.css" %} ')
+      function printDiv(divId) {
+          window.frames["print_frame"].document.body.innerHTML=printDivCSS + printDivCSS2  + document.querySelector('.panel').innerHTML;
+          window.frames["print_frame"].window.focus();
+          window.frames["print_frame"].window.print();
+      }
+  </script>
+  
+</head>
+<body>
+    <div class="container bootstrap snippets bootdeys col-md-9">
+        <div class="row" style="border: 1px solid black">
+          <div class="container-fluid col-sm-12">
+                  <div class="panel panel-default invoice" id="invoice">
+                  <div class="panel-body">
+                    <div class="invoice-ribbon"><div class="ribbon-inner">PAID</div></div>
+                    <div class="row">
+        
+                        <div class="col-sm-6 top-left">
+                            {% comment %} <i class="fa fa-rocket"></i> {% endcomment %}
+                            <img src="{{user.userprofile.business_logo.url}}" alt="" width=120>
+                        </div>
+        
+                        <div class="col-sm-6 top-right">
+                                <h3 class="marginright">INVOICE-{{single_invoice.receipt_no}}</h3>
+                                <span class="marginright">{{single_invoice.created_at}}</span>
+                        </div>
+        
+                    </div>
+                    <hr>
+                    <div class="row p-2" style="display:flex; justify-content: space-around">
+        
+                        <div class="col-xs-4 from" style="max-width:30%; text-align:justify">
+                            <p class="lead marginbottom">From : {{user.userprofile.business_name}}</p>
+                            <p>
+                              <p>Address: {{user.userprofile.business_address}}</p>
+                              <p>Phone: {{user.phone}}</p>
+                            </p>
+                        </div>
+        
+                        <div class="col-xs-4 to">
+                            <p class="lead marginbottom">To : {{single_invoice.receive_from}}</p>
+                            <p>Address: {{single_invoice.address}}</p>
+                            <p>Phone: {{single_invoice.phone}}</p>
+                            {% comment %} <p>Email: </p> {% endcomment %}
+        
+                        </div>
+        
+                        <div class="col-xs-4 text-right payment-details">
+                            <p class="lead marginbottom payment-info">Payment details</p>
+                            <p>Date: {{single_invoice.created_at}}</p>
+                            <p>Total Amount: {{total | intcomma}}</p>
+                            
+                        </div>
+        
+                    </div>
+        
+                    <div class="row table-row">
+                        <table class="table table-striped">
+                          <thead>
+                            <tr>
+                             
+                              <th style="width:50%">Item Description</th>
+                              <th class="text-right" style="width:15%">Quantity</th>
+                              <th class="text-right" style="width:15%">Unit Price</th>
+                              <th class="text-right" style="width:15%">Total Price</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              
+                            {% for item in items  %}
+                              <tr>
+                            
+                                <td>{{ item.item_name }}</td>
+                                <td class="text-right">{{ item.item_qty }}</td>
+                                <td class="text-right">{{ item.item_price | intcomma }}</td>
+                                <td class="text-right">{{item.get_sub_total | intcomma}} </td>
+                              </tr>
+                            {% endfor %}
+                            
+                            
+                             {% comment %} <tr class="last-row">
+                              <td class="text-center">4</td>
+                              <td>Server Deployment</td>
+                              <td class="text-right">1</td>
+                              <td class="text-right">$300</td>
+                              <td class="text-right">$300</td>
+                            </tr> {% endcomment %}
+                           </tbody>
+                        </table>
+        
+                    </div>
+        
+                    <div class="row" style="display:flex; justify-content:space-around">
+                    <div class="col-xs-6 margintop">
+                        <p class="lead marginbottom">THANK YOU!</p>
+        
+                    </div>
+                    <div class="col-xs-6 text-right pull-right invoice-total">
+                              <p>Total : &#8358;{{total | intcomma}} </p>
+                    </div>
+                    </div>
+        
+                  </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <br>
+        <div class="row col-md-12 text-center">
+          <div class="col-md-5"></div>
+         <a class="btn btn-secondary" href="javascript:printDiv('div1')">Print</a> &nbsp;
+         <a class="btn btn-primary" href="{% url 'add_item' %}">Add More Product</a>
+      </div>
+     
+      <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+</body>
+</html>
+

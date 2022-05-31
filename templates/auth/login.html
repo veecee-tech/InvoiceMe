@@ -1,0 +1,38 @@
+{% extends 'includes/base.html' %}
+{% load static %}
+
+
+{% block title %}
+LOGIN | A good way to secure your receipts
+{% endblock title %}
+
+{% block css_file %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock css_file %}
+
+{% block content %}
+    <div class="container">
+        <div class="login-container">
+            <div class="logo">
+                
+                <img src="{% static 'img/loginlogo.png' %}" width="150" alt="">
+            </div>
+            <br>
+            <h3>Welcome to InvoiceMe</h3>
+            <br>
+            {% include 'includes/alerts.html' %}
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+                <div class="input">
+                    <input type="text" class="form-control" placeholder="Account Number" name="account_number" id=""> <br>
+                    <input type="password" name="password" class="form-control" placeholder="Enter Password">
+
+                    <input type="submit" value="Sign In">
+                    
+                </div>
+            </form>
+        </div>
+        
+
+    </div>
+{% endblock content %}
